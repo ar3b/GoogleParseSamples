@@ -95,7 +95,7 @@ $doc = new Document();
 $doc->loadHtml($data);
 
 // Search for ADS blocks
-$ads_data = $doc->find("//li[contains(@class, 'ads-ad')]", Query::TYPE_XPATH);
+$ads_data = $doc->find("//li[@class='ads-ad']", Query::TYPE_XPATH);
 
 // Processing every block
 foreach ($ads_data as $ads) {
@@ -113,6 +113,7 @@ foreach ($ads_data as $ads) {
     r("Urls",implode("\n \t\t", $urls));
 
     // Searching for descr
+
 
     sep();
 }
