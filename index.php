@@ -25,10 +25,11 @@ $_domain = "google.com.ua";
 $_user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0";
 $_force_pc = true;
 $_location = "Kiev,Kyiv city,Ukraine";
-$_force_cache = false;
+$_force_cache = true;
 
 echo "<pre>".PHP_EOL;
 l("start");
+sep();
 
 $url = "https://www.".$_domain."/search?";
 
@@ -71,11 +72,16 @@ l("Real url:     ".$request->url);
 l("Request code: ".$request->status_code);
 
 if (($request->status_code == 200) AND (!$_force_cache)) {
-    file_put_contents(__DIR__. "/cached/result.html", $request->body);
+    file_put_contents(__DIR__ . "/cached/result.html", $request->body);
+    $data = $request->body;
 } else {
-    l("From cache");
-    $data = file_get_contents("/cached/result.html");
+    l("From cache".($_force_cache?" - forced":""));
+    $data = file_get_contents(__DIR__ . "/cached/result.html");
 }
+sep();
+
+// Parsing
+
 
 sep();
 l("Done");
