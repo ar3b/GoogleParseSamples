@@ -1,26 +1,29 @@
 <?php
 
+// vendor autoload
 require 'autoload.php';
-use DiDom\Document;
 
+// parsing libs
+use DiDom\Document;
+use DiDom\Query;
+
+// log
 function l($txt) {
     print htmlspecialchars($txt).PHP_EOL;
 }
 
+// log separator
 function sep() {
     l(str_repeat("-",20));
 }
 
+// uule counting
 function __uule($city) {
     $secretkey = array_merge(range('A','Z'), range('a','z'), range('0','9'), array('-', '_'));
     return trim('w+CAIQICI'.$secretkey[strlen($city)%count($secretkey)].base64_encode($city), '=');
 }
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-//  --- SETTINGS
+// settings
 $_domain = "google.com.ua";
 $_user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0";
 $_force_pc = true;
@@ -33,6 +36,7 @@ sep();
 
 $url = "https://www.".$_domain."/search?";
 
+// query params
 $params = array(
     "q" => "купить футболку",
     "adtest" => "on",
@@ -67,7 +71,7 @@ $headers = array(
     "Connection" => "keep-alive",
     "User-Agent" => $_user_agent,
 );
-$request = Requests::get($url,$headers);
+$request = Requests::get($url, $headers);
 l("Real url:     ".$request->url);
 l("Request code: ".$request->status_code);
 
@@ -81,7 +85,8 @@ if (($request->status_code == 200) AND (!$_force_cache)) {
 sep();
 
 // Parsing
-
+$doc = new Document();
+$doc->loadHtml($data);
 
 sep();
 l("Done");
