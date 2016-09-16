@@ -2,6 +2,7 @@
 
 $time_start = microtime(true);
 
+
 // vendor autoload
 require 'autoload.php';
 
@@ -87,11 +88,25 @@ if (($request->status_code == 200) AND (!$_force_cache)) {
     l("From cache".($_force_cache?" - forced":""));
     $data = file_get_contents(__DIR__ . "/cached/result.html");
 }
+
+sep();
+l("REGULAR BLOCKS");
 sep();
 
 // Parsing
 $doc = new Document();
 $doc->loadHtml($data);
+
+// Searching for regular result items
+$reg_blocks = $doc->xpath("//div[@id='search']//div[@id='ires']//div[@class='g']");
+foreach ($reg_blocks as $block) {
+    $title = $block->xpath("//h3/a")[0];
+    r("Title", $title->text());
+}
+
+sep();
+l("ADS BLOCKS");
+sep();
 
 // Search for ADS blocks
 $ads_data = $doc->xpath("//li[@class='ads-ad']");
