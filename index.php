@@ -30,6 +30,7 @@ $_force_pc = true;
 $_location = "Kiev,Kyiv city,Ukraine";
 $_force_cache = true;
 
+header('Content-Type: text/html; charset=utf-8');
 echo "<pre>".PHP_EOL;
 l("start");
 sep();
@@ -88,5 +89,15 @@ sep();
 $doc = new Document();
 $doc->loadHtml($data);
 
-sep();
+// Search for ADS blocks
+$ads_data = $doc->find("//li[contains(@class, 'ads-ad')]", Query::TYPE_XPATH);
+//print_r($ads_data[0]);
+
+// Processing every block
+foreach ($ads_data as $ads) {
+    $title = $ads->find("//h3/a[@data-preconnect-urls]", Query::TYPE_XPATH)[0];
+    l("\tTitle: ".$title->text());
+    sep();
+}
+
 l("Done");
