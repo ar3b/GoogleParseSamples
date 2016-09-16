@@ -132,6 +132,7 @@ foreach ($ads_data as $key=>$ads) {
         r("Address", $addr[0]->text());
     }
 
+    // Searching for working time
     $work_times = $ads->find("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/div[@class='_K2b']/span/g-bubble/div//table[@role='presentation']//tr", Query::TYPE_XPATH);
     if (count($work_times)!=0) {
         $time_string = array();
