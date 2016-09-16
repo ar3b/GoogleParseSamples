@@ -120,6 +120,12 @@ foreach ($ads_data as $key=>$ads) {
     }
     r("Description", trim($description));
 
+    // Searching for phone
+    $phone = $ads->find("//span[@class='_r2b']", Query::TYPE_XPATH);
+    if (count($phone)!=0) {
+        r("Phone", $phone[0]->text());
+    }
+
     sep();
 }
 $time_end = microtime(true);
