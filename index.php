@@ -132,6 +132,17 @@ foreach ($ads_data as $key=>$ads) {
         r("Address", $addr[0]->text());
     }
 
+    $work_times = $ads->find("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/div[@class='_K2b']/span/g-bubble/div//table[@role='presentation']//tr", Query::TYPE_XPATH);
+    if (count($work_times)!=0) {
+        $time_string = array();
+        foreach ($work_times as $time_item) {
+            $day = $time_item->find("//td[not(@class)]/div", Query::TYPE_XPATH)[0];
+            $time = $time_item->find("//td[@class]/div", Query::TYPE_XPATH)[0];
+            $time_string[] = $day->text().": ".$time->text();
+        }
+        r("Working time",implode("\n \t\t", $time_string));
+    }
+
     sep();
 }
 $time_end = microtime(true);
