@@ -18,7 +18,7 @@ function r($key, $value) {
 
 // log separator
 function sep() {
-    l(str_repeat("-",20));
+    l(str_repeat("-",80));
 }
 
 // uule counting
@@ -132,7 +132,7 @@ foreach ($ads_data as $key=>$ads) {
     }
 
     // Searching for working time
-    $work_times = $ads->find("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/div[@class='_K2b']/span/g-bubble/div//table[@role='presentation']//tr", Query::TYPE_XPATH);
+    $work_times = $ads->xpath("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/div[@class='_K2b']/span/g-bubble/div//table[@role='presentation']//tr");
     if (count($work_times)!=0) {
         $time_string = array();
         foreach ($work_times as $time_item) {
