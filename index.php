@@ -10,8 +10,11 @@ use DiDom\Document;
 use DiDom\Query;
 
 // log
-function l($txt) {
+function l($txt=" ") {
     print htmlspecialchars($txt).PHP_EOL;
+}
+function r($key, $value) {
+    l("\t".$key.":\n \t\t".$value);
 }
 
 // log separator
@@ -93,14 +96,27 @@ $doc->loadHtml($data);
 
 // Search for ADS blocks
 $ads_data = $doc->find("//li[contains(@class, 'ads-ad')]", Query::TYPE_XPATH);
-//print_r($ads_data[0]);
 
 // Processing every block
 foreach ($ads_data as $ads) {
+
+    // Searching for title
     $title = $ads->find("//h3/a[@data-preconnect-urls]", Query::TYPE_XPATH)[0];
-    l("\tTitle: ".$title->text());
+    r("Title", $title->text());
+
+    // Searching for urls
+    $urls = explode(",",$title->attr('data-preconnect-urls'));
+    $href = $title->attr("href");
+    if ((!is_null($href)) and ($href!=false) and ($href!="#") and (!in_array($href, $urls))) {
+        array_unshift($urls, $href);
+    }
+    r("Urls",implode("\n \t\t", $urls));
+
+    // Searching for descr
+
     sep();
 }
 $time_end = microtime(true);
 
+l();l();
 l("Done in ".($time_end - $time_start)." sec");
