@@ -126,6 +126,12 @@ foreach ($ads_data as $key=>$ads) {
         r("Phone", $phone[0]->text());
     }
 
+    // Searching for address
+    $addr = $ads->find("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/a[@class='_vnd']", Query::TYPE_XPATH);
+    if (count($addr)!=0) {
+        r("Address", $addr[0]->text());
+    }
+
     sep();
 }
 $time_end = microtime(true);
