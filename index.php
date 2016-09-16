@@ -7,7 +7,6 @@ require 'autoload.php';
 
 // parsing libs
 use DiDom\Document;
-use DiDom\Query;
 
 // log
 function l($txt=" ") {
@@ -95,13 +94,13 @@ $doc = new Document();
 $doc->loadHtml($data);
 
 // Search for ADS blocks
-$ads_data = $doc->find("//li[@class='ads-ad']", Query::TYPE_XPATH);
+$ads_data = $doc->xpath("//li[@class='ads-ad']");
 
 // Processing every block
 foreach ($ads_data as $key=>$ads) {
 
     // Searching for title
-    $title = $ads->find("//h3/a[@data-preconnect-urls]", Query::TYPE_XPATH)[0];
+    $title = $ads->xpath("//h3/a[@data-preconnect-urls]")[0];
     r("Title", $title->text());
 
     // Searching for urls
@@ -113,7 +112,7 @@ foreach ($ads_data as $key=>$ads) {
     r("Urls",implode("\n \t\t", $urls));
 
     // Searching for descr
-    $descr = $ads->find("//div[starts-with(@class, 'ellip')]", Query::TYPE_XPATH);
+    $descr = $ads->xpath("//div[starts-with(@class, 'ellip')]");
     $description = "";
     foreach ($descr as $d) {
         $description .= $d->text()." ";
@@ -121,13 +120,13 @@ foreach ($ads_data as $key=>$ads) {
     r("Description", trim($description));
 
     // Searching for phone
-    $phone = $ads->find("//span[@class='_r2b']", Query::TYPE_XPATH);
+    $phone = $ads->xpath("//span[@class='_r2b']");
     if (count($phone)!=0) {
         r("Phone", $phone[0]->text());
     }
 
     // Searching for address
-    $addr = $ads->find("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/a[@class='_vnd']", Query::TYPE_XPATH);
+    $addr = $ads->xpath("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/a[@class='_vnd']");
     if (count($addr)!=0) {
         r("Address", $addr[0]->text());
     }
@@ -137,8 +136,8 @@ foreach ($ads_data as $key=>$ads) {
     if (count($work_times)!=0) {
         $time_string = array();
         foreach ($work_times as $time_item) {
-            $day = $time_item->find("//td[not(@class)]/div", Query::TYPE_XPATH)[0];
-            $time = $time_item->find("//td[@class]/div", Query::TYPE_XPATH)[0];
+            $day = $time_item->xpath("//td[not(@class)]/div")[0];
+            $time = $time_item->xpath("//td[@class]/div")[0];
             $time_string[] = $day->text().": ".$time->text();
         }
         r("Working time",implode("\n \t\t", $time_string));
