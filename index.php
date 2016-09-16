@@ -1,5 +1,7 @@
 <?php
 
+$time_start = microtime(true);
+
 // vendor autoload
 require 'autoload.php';
 
@@ -99,5 +101,6 @@ foreach ($ads_data as $ads) {
     l("\tTitle: ".$title->text());
     sep();
 }
+$time_end = microtime(true);
 
-l("Done");
+l("Done in ".($time_end - $time_start)." sec");
