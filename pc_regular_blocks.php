@@ -80,5 +80,13 @@ $reg_blocks = $doc->xpath("//div[@id='search']//div[@id='ires']//div[@class='g']
 foreach ($reg_blocks as $block) {
     $title = $block->xpath("//h3/a")[0];
     r("Title", $title->text());
+
+    $urls = $block->xpath("//div[@class='s']//div[contains(@class, 'f') and contains(@class, 'kv')]/cite[(@class='_Rm')]");
+    if ((count($urls)>0) and (!preg_match('/\.\.\./', $urls[0]->text()))) {
+        r("Url", "http://".$urls[0]->text());
+    }  else {
+        r("Url", "None");
+    }
+
     sep();
 }
