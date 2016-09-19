@@ -88,5 +88,8 @@ foreach ($reg_blocks as $block) {
         r("Url", "None");
     }
 
+    $descr = $block->xpath("//div[@class='s']//span[@class='st']");
+    r("Descr", $descr[0]->text());
+
     sep();
 }
