@@ -70,62 +70,55 @@ if (($request->status_code == 200) AND (!$_force_cache)) {
 }
 
 sep();
-l("REGULAR BLOCKS");
-sep();
 
 // Parsing
 $doc = new Document();
 $doc->loadHtml($data);
 
 // Search for ADS blocks
-$ads_data = $doc->xpath("//li[@class='ads-ad']");
+$ads_data = $doc->xpath("//div[@id='tads' or @id='tadsb']//li[@class='mnr-c']//div[@class='ads-ad']");
+
 
 // Processing every block
 foreach ($ads_data as $key=>$ads) {
 
+
     // Searching for title
-    $title = $ads->xpath("//h3/a[@data-preconnect-urls]")[0];
+    $title = $ads->xpath("//h3/a")[0];
     r("Title", $title->text());
 
+
     // Searching for urls
-    $urls = explode(",",$title->attr('data-preconnect-urls'));
-    $href = $title->attr("href");
-    if ((!is_null($href)) and ($href!=false) and ($href!="#") and (!in_array($href, $urls))) {
-        array_unshift($urls, $href);
-    }
-    r("Urls",implode("\n \t\t", $urls));
+    $url = $ads->xpath("//div[@class='ads-visurl']/cite")[0];
+    r("Url", "http://".$url->text());
+
+    // Testing description have phone
+    $umg = $ads->xpath("//div[@class='_Umg']");
+    $have_phone = count($umg)!=0;
+    $phone = null;
 
     // Searching for descr
-    $descr = $ads->xpath("//div[starts-with(@class, 'ellip')]");
+    $descr = $ads->xpath("//div[contains(@class, 'ads-creative') or starts-with(@class, 'ellip')]");
     $description = "";
-    foreach ($descr as $d) {
-        $description .= $d->text()." ";
+    foreach ($descr as $number=>$d) {
+        if (($have_phone) and ($number==(count($descr)-1))) {
+            $phone = trim(explode(":", $d->text())[1]);
+        } else {
+            $description .= $d->text() . " ";
+        }
     }
     r("Description", trim($description));
 
-    // Searching for phone
-    $phone = $ads->xpath("//span[@class='_r2b']");
-    if (count($phone)!=0) {
-        r("Phone", $phone[0]->text());
+    if (($have_phone) and !is_null($phone)) {
+        r("Phone", $phone);
     }
 
     // Searching for address
-    $addr = $ads->xpath("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/a[@class='_vnd']");
+    $addr = $ads->xpath("//div[@class='_pEc']/div/span/a/span[contains(@class,'ellip')]/span");
     if (count($addr)!=0) {
         r("Address", $addr[0]->text());
     }
 
-    // Searching for working time
-    $work_times = $ads->xpath("//div[contains(@class, '_wnd') and contains(@class, 'ellip')]/div[@class='_H2b']/div[@class='_K2b']/span/g-bubble/div//table[@role='presentation']//tr");
-    if (count($work_times)!=0) {
-        $time_string = array();
-        foreach ($work_times as $time_item) {
-            $day = $time_item->xpath("//td[not(@class)]/div")[0];
-            $time = $time_item->xpath("//td[@class]/div")[0];
-            $time_string[] = $day->text().": ".$time->text();
-        }
-        r("Working time",implode("\n \t\t", $time_string));
-    }
-
     sep();
+
 }
