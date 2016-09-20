@@ -9,8 +9,8 @@ require_once 'libs/libs.php';
 
 // settings
 $_domain = "google.com.ua";
-$_user_agent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:48.0) Gecko/20100101 Firefox/48.0";
-$_force_pc = true;
+$_user_agent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 5_1_1 like Mac OS X; en) AppleWebKit/534.46.0 (KHTML, like Gecko) CriOS/19.0.1084.60 Mobile/9B206 Safari/7534.48.3";
+$_force_pc = false;
 $_location = "Kiev,Kyiv city,Ukraine";
 $_force_cache = true;
 $_query = "купить футболку";
@@ -69,6 +69,8 @@ if (($request->status_code == 200) AND (!$_force_cache)) {
     $data = file_get_contents(__DIR__ . "/cached/result.html");
 }
 
+sep();
+l("REGULAR BLOCKS");
 sep();
 
 // Parsing
