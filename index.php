@@ -1,7 +1,7 @@
 <?php
 
 $time_start = microtime(true);
-require_once 'mobile_ads_blocks.php';
+require_once 'mobile_regular_blocks.php';
 
 $time_end = microtime(true);
 l();l();
