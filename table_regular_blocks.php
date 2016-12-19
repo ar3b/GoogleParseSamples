@@ -7,6 +7,17 @@ use DiDom\Document;
 require_once 'autoload.php';
 require_once 'libs/libs.php';
 
+// requesting proxy data
+$request = Requests::get("http://gimmeproxy.com/api/getProxy?supportsHttps=true&websites=google&get=true&user-agent=true&maxCheckPeriod=300&protocol=http");
+$proxy_data = json_decode($request->body, true);
+var_dump($proxy_data);
+
+$options = array(
+    "proxy" => array(
+        $proxy_data["ipPort"]
+    )
+);
+
 // settings
 $_domain = "google.com.ua";
 $_user_agent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Safari/535.19";
@@ -57,7 +68,7 @@ $headers = array(
     "Connection" => "keep-alive",
     "User-Agent" => $_user_agent,
 );
-$request = Requests::get($url, $headers);
+$request = Requests::get($url, $headers, $options);
 l("Real url:     ".$request->url);
 l("Response code: ".$request->status_code);
 
