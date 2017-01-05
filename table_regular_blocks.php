@@ -9,35 +9,42 @@ require_once 'libs/libs.php';
 
 $options = array();
 
-// requesting proxy data
-$request = Requests::get("http://gimmeproxy.com/api/getProxy?supportsHttps=true&websites=google&get=true&user-agent=true&protocol=http&api_key=45d12cbc-51d7-4783-a58f-3bacbc27e8f2");
-$proxy_data = json_decode($request->body, true);
-var_dump($proxy_data);
-if (isset($proxy_data["error"])) {
-    die();
-}
-
-// 147.75.209.13:10200
-// 147.75.208.63:10200
-// 147.75.208.71:10200
-// 185.89.218.14:10200
-
-$options = array(
-    "proxy" => array(
-        $proxy_data["ipPort"]
-    )
-);
-
-//manual proxy
 //$options = array(
 //    "proxy" => array(
-//        ""
+//        "147.75.209.13:10200"
 //    )
 //);
+
+if (!isset($options["proxy"])) {
+    // requesting proxy data
+    $proxy_params = array(
+        "user-agent=true",
+        "websites=google",
+        "get=true",
+        "protocol=http",
+        "supportsHttps=true",
+        "api_key=45d12cbc-51d7-4783-a58f-3bacbc27e8f2"
+    );
+    $request = Requests::get(
+        "http://gimmeproxy.com/api/getProxy?".implode("&", $proxy_params)
+    );
+    $proxy_data = json_decode($request->body, true);
+    var_dump($proxy_data);
+    if (isset($proxy_data["error"])) {
+        die();
+    }
+
+    $options = array(
+        "proxy" => array(
+            $proxy_data["ipPort"]
+        )
+    );
+}
 
 // settings
 $_domain = "google.com.ua";
 $_user_agent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Safari/535.19";
+//$_user_agent = "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/7.0; tb-gmx/2.6.8)";
 $_force_pc = false;
 $_location = "Kiev,Kyiv city,Ukraine";
 $_force_cache = false;
