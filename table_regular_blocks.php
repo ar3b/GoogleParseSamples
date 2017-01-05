@@ -7,10 +7,20 @@ use DiDom\Document;
 require_once 'autoload.php';
 require_once 'libs/libs.php';
 
+$options = array();
+
 // requesting proxy data
-$request = Requests::get("http://gimmeproxy.com/api/getProxy?supportsHttps=true&websites=google&get=true&user-agent=true&maxCheckPeriod=300&protocol=http");
+$request = Requests::get("http://gimmeproxy.com/api/getProxy?supportsHttps=true&websites=google&get=true&user-agent=true&protocol=http&api_key=45d12cbc-51d7-4783-a58f-3bacbc27e8f2");
 $proxy_data = json_decode($request->body, true);
 var_dump($proxy_data);
+if (isset($proxy_data["error"])) {
+    die();
+}
+
+// 147.75.209.13:10200
+// 147.75.208.63:10200
+// 147.75.208.71:10200
+// 185.89.218.14:10200
 
 $options = array(
     "proxy" => array(
@@ -18,12 +28,19 @@ $options = array(
     )
 );
 
+//manual proxy
+//$options = array(
+//    "proxy" => array(
+//        ""
+//    )
+//);
+
 // settings
 $_domain = "google.com.ua";
 $_user_agent = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Safari/535.19";
 $_force_pc = false;
 $_location = "Kiev,Kyiv city,Ukraine";
-$_force_cache = true;
+$_force_cache = false;
 $_query = "купить футболку";
 
 $url = "https://www.".$_domain."/search?";
@@ -71,6 +88,10 @@ $headers = array(
 $request = Requests::get($url, $headers, $options);
 l("Real url:     ".$request->url);
 l("Response code: ".$request->status_code);
+
+if ($request->status_code!=200) {
+    die();
+}
 
 if (($request->status_code == 200) AND (!$_force_cache)) {
     file_put_contents(__DIR__ . "/cached/result.html", $request->body);
